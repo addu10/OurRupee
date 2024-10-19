@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cause Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            margin-top: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cause Registration</h1>
+        <form id="registrationForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="mobile">Mobile Number:</label>
+            <input type="tel" id="mobile" name="mobile" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="title">Title (Cause):</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+
+            <label for="target">Target Amount:</label>
+            <input type="number" id="target" name="target" min="0" step="0.01" required>
+
+            <label>Submission of proof:</label>
+            <label for="videos">Videos:</label>
+            <input type="file" id="videos" name="videos" accept="video/*" multiple>
+
+            <label for="documents">Documents:</label>
+            <input type="file" id="documents" name="documents" accept=".pdf,.doc,.docx" multiple>
+
+            <label for="news">News Articles:</label>
+            <input type="file" id="news" name="news" accept=".pdf,.doc,.docx,.txt" multiple>
+
+            <label for="recommendations">Recommendations:</label>
+            <textarea id="recommendations" name="recommendations" rows="4"></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const name = document.getElementById('name').value;
+            const mobile = document.getElementById('mobile').value;
+            const email = document.getElementById('email').value;
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const target = document.getElementById('target').value;
+
+            // Basic validation
+            if (!name || !mobile || !email || !title || !description || !target) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Form data object to be sent to AI
+            const formData = {
+                name: name,
+                mobile: mobile,
+                email: email,
+                title: title,
+                description: description,
+                target: target
+            };
+
+            // AI Prompt for Trustworthiness Rating
+            const prompt = `
+                You are a request trustworthiness rating bot. I need you to give the following request a trustworthiness score from 1 to 10 (10 being the best). The data you are getting is:
+                Name: ${name}, 
+                Mobile: ${mobile}, 
+                Email: ${email}, 
+                Title: ${title}, 
+                Description: ${description}, 
+                Target Amount: ${target}.
+            `;
+
+            try {
+                // Make the AI request
+                const response = await fetch('/ai-rating', { // assuming '/ai-rating' is the endpoint
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt })
+                });
+
+                const result = await response.json();
+
+                if (result && result.score) {
+                    alert(`Trustworthiness Score: ${result.score}/10`);
+                } else {
+                    alert('Error receiving score from AI');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to communicate with AI');
+            }
+        });
+    </script>
+</body>
+</html>

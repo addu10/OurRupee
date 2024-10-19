@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cause Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            margin-top: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cause Registration</h1>
+        <form id="registrationForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="mobile">Mobile Number:</label>
+            <input type="tel" id="mobile" name="mobile" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="title">Title (Cause):</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+
+            <label for="target">Target Amount:</label>
+            <input type="number" id="target" name="target" min="0" step="0.01" required>
+
+            <label>Submission of proof:</label>
+            <label for="videos">Videos:</label>
+            <input type="file" id="videos" name="videos" accept="video/*" multiple>
+
+            <label for="documents">Documents:</label>
+            <input type="file" id="documents" name="documents" accept=".pdf,.doc,.docx" multiple>
+
+            <label for="news">News Articles:</label>
+            <input type="file" id="news" name="news" accept=".pdf,.doc,.docx,.txt" multiple>
+
+            <label for="recommendations">Recommendations:</label>
+            <textarea id="recommendations" name="recommendations" rows="4"></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Basic form validation
+            var name = document.getElementById('name').value;
+            var mobile = document.getElementById('mobile').value;
+            var email = document.getElementById('email').value;
+            var title = document.getElementById('title').value;
+            var description = document.getElementById('description').value;
+            var target = document.getElementById('target').value;
+
+            if (!name || !mobile || !email || !title || !description || !target) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // If all validations pass, you can submit the form data
+            // For this example, we'll just log it to the console
+            console.log('Form submitted:', {
+                name: name,
+                mobile: mobile,
+                email: email,
+                title: title,
+                description: description,
+                target: target
+                // Add other form fields here
+            });
+
+            alert('Form submitted successfully!');
+            // In a real application, you would send this data to your server or blockchain
+        });
+    </script>
+</body>
+</html>
