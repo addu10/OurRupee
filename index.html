@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DonationTracker - Transparent Public Donations</title>
+    <style>
+        :root {
+            --primary-color: #82b6b4;
+            --secondary-color: #202b2b;
+            --text-color: #333;
+            --bg-color: #f0f0f0;
+            --nav-bg: #ffffff;
+        }
+        body, html {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+        header {
+            background-color: var(--nav-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+        .nav-links a:hover {
+            color: var(--primary-color);
+            background-color: rgba(32, 178, 170, 0.1);
+        }
+        .hero {
+            background-image: linear-gradient(rgba(32, 178, 170, 0.8), rgba(0, 128, 128, 0.8)), url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 8rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80vh;
+        }
+        .hero-content {
+            max-width: 800px;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary-color);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            padding: 4rem 5%;
+            background-color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .feature {
+            text-align: center;
+            max-width: 300px;
+        }
+        .feature i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .about {
+            background-color: var(--bg-color);
+            padding: 4rem 5%;
+            text-align: center;
+        }
+        .about h2 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+        .team-members {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        .team-member {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        .team-member img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">DonationTracker</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#register">Register</a></li>
+                <li><a href="admin.html">Admin Page</a></li>
+                <li><a href="#cause">Register Cause</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Transparent Donations, Real Impact</h1>
+            <p>Join us in making every donation count. Track your contribution and see the change you're making in real-time.</p>
+            <a href="#register" class="cta-button">Start Donating</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+            <i class="fas fa-hand-holding-usd"></i>
+            <h3>Transparent Tracking</h3>
+            <p>See exactly how your donations are being used and the impact they're making.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-users"></i>
+            <h3>Community Driven</h3>
+            <p>Join a community of like-minded individuals committed to making a difference.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-chart-line"></i>
+            <h3>Efficient Allocation</h3>
+            <p>We ensure your donations are allocated efficiently to maximize impact.</p>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <h2>About Our Team</h2>
+        <p>We're a dedicated group of professionals passionate about creating positive change through transparent and effective donations.</p>
+        <div class="team-members">
+            <div class="team-member">
+                <img src="Profile.jpg" alt="ASHBIN">
+                <h4>ASHBIN</h4>
+                <p>Founder & CEO</p>
+            </div>
+            <div class="team-member">
+                <img src="advaith.jpg" alt="ADVAITH">
+                <h4>ADVAITH</h4>
+                <p>CTO</p>
+            </div>
+            <div class="team-member">
+                <img src="almas.jpg" alt="ALMAS">
+                <h4>ALMAS</h4>
+                <p>Head of Operations</p>
+            </div>
+            <div class="team-member">
+                <img src="adnan.jpg" alt="ADNAN">
+                <h4>ADNAN</h4>
+                <p>Lead Developer</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 DonationTracker. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Simple animation for features on scroll
+            const features = document.querySelectorAll('.feature');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            features.forEach(feature => {
+                feature.style.opacity = 0;
+                feature.style.transform = 'translateY(20px)';
+                feature.style.transition = 'opacity 0.5s, transform 0.5s';
+                observer.observe(feature);
+            });
+        });
+    </script>
+</body>
+</html>
