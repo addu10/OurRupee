@@ -168,12 +168,11 @@
                 <li><a href="#about">About</a></li>
                 
                 {% if session %}
-                <h1>Welcome {{session.userinfo.name}}!</h1>
+               <li><a href="#userinfo">{{session.userinfo.name}}!</a></li> 
                 
                 <li><a href="/logout" id="qsLogoutBtn">Logout</a></li>
                 <!--<div><pre>{{pretty}}</pre></div>-->
                 {% else %}
-                <h1 id="profileDropDown">Welcome Guest</h1>
                 <li><a href="/login" id="qsLoginBtn">Login</a></li>
                 {% endif %}
                 <li><a href="#cause">Register Cause</a></li>
@@ -218,22 +217,22 @@
         <p>We're a dedicated group of professionals passionate about creating positive change through transparent and effective donations.</p>
         <div class="team-members">
             <div class="team-member">
-                <img src="/api/placeholder/100/100" alt="ASHBIN">
+                <img src="/static/profile.jpg" alt="ASHBIN">
                 <h4>ASHBIN</h4>
                 <p>Founder & CEO</p>
             </div>
             <div class="team-member">
-                <img src="/api/placeholder/100/100" alt="ADVAITH">
+                <img src="/static/advaith.jpg" alt="ADVAITH">
                 <h4>ADVAITH</h4>
-                <p>CTO</p>
+                <p>Block Chain Developer</p>
             </div>
             <div class="team-member">
-                <img src="/api/placeholder/100/100" alt="ALMAS">
+                <img src="/static/almas.jpg" alt="ALMAS">
                 <h4>ALMAS</h4>
                 <p>Head of Operations</p>
             </div>
             <div class="team-member">
-                <img src="/api/placeholder/100/100" alt="ADNAN">
+                <img src="/static/adnan.jpg" alt="ADNAN">
                 <h4>ADNAN</h4>
                 <p>Lead Developer</p>
             </div>
