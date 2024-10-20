@@ -4,7 +4,7 @@ let signer;
 let contract;
 
 // Contract address and ABI
-const contractAddress = "0x0A93645924517D08048Bed86b6B12B5217A4F173"; // Your contract address
+const contractAddress = "0x5407111f720ddf8aF16cd13fC5E0f2A7B4E698Ca"; // Your contract address
 const contractABI = [
 	{
 		"inputs": [
