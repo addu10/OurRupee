@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Rupee</title>
+    <title>DonationTracker - Transparent Public Donations</title>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
     <style>
         :root {
@@ -193,20 +193,9 @@
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="/register">Register Cause</a></li>
-                <li><a href="/adminlogin">Admin Page</a></li>
-                {% if session %}
-               
-                
-                <li><a href="/logout" id="qsLogoutBtn">Logout</a></li>
-                <!--<div><pre>{{pretty}}</pre></div>-->
-                {% else %}
-                <li><a href="/login" id="qsLoginBtn">Login</a></li>
-                {% endif %}
-                
-                {% if session %}
-                <li><a href="/userdash">{{session.userinfo.name}}!</a></li>
-                {% endif %}
+                <li><a href="#register">Register</a></li>
+                <li><a href="admin.html">Admin Page</a></li>
+                <li><a href="#cause">Register Cause</a></li>
             </ul>
         </nav>
     </header>
@@ -215,10 +204,9 @@
         <div class="hero-content">
             <h1>Transparent Donations, Real Impact</h1>
             <p>Join us in making every donation count. Track your contribution and see the change you're making in real-time.</p>
-            <a href="/viewcamp" class="cta-button">Start Donating</a>
+            <a href="#register" class="cta-button">View all campaign</a>
         </div>
     </section>
-
 
     <section class="features">
         <div class="feature">
@@ -256,22 +244,22 @@
         <p>We're a dedicated group of professionals passionate about creating positive change through transparent and effective donations.</p>
         <div class="team-members">
             <div class="team-member">
-                <img src="/static/profile.jpg" alt="ASHBIN">
-                <h4>ASHBIN</h4>
-                <p>UI/UX Designer</p>
-            </div>
-            <div class="team-member">
-                <img src="/static/advaith.jpg" alt="ADVAITH">
+                <img src="advaith.jpg" alt="ADVAITH">
                 <h4>ADVAITH</h4>
-                <p>Block Chain Developer</p>
+                <p>Founder & CEO</p>
             </div>
             <div class="team-member">
-                <img src="/static/almas.jpg" alt="ALMAS">
+                <img src="Profile.jpg" alt="ASHBIN">
+                <h4>ASHBIN</h4>
+                <p>CTO</p>
+            </div>
+            <div class="team-member">
+                <img src="almas.jpg" alt="ALMAS">
                 <h4>ALMAS</h4>
                 <p>Head of Operations</p>
             </div>
             <div class="team-member">
-                <img src="/static/adnan.jpg" alt="ADNAN">
+                <img src="adnan.jpg" alt="ADNAN">
                 <h4>ADNAN</h4>
                 <p>Lead Developer</p>
             </div>
@@ -281,7 +269,7 @@
     <footer>
         <p>&copy; 2024 DonationTracker. All rights reserved.</p>
     </footer>
-    <script src="auth0-integration.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             // Smooth scrolling for navigation links
@@ -293,7 +281,7 @@
                     });
                 });
             });
-    
+
             // Simple animation for features on scroll
             const features = document.querySelectorAll('.feature');
             const observer = new IntersectionObserver((entries) => {
@@ -304,7 +292,7 @@
                     }
                 });
             }, { threshold: 0.1 });
-    
+
             features.forEach(feature => {
                 feature.style.opacity = 0;
                 feature.style.transform = 'translateY(20px)';
@@ -313,7 +301,5 @@
             });
         });
     </script>
-    </body>
-    </html>
 </body>
 </html>

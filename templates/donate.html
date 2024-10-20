@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate to Campaign</title>
+    <link rel="stylesheet" href="/static/styles.css"> <!-- Assuming you have a CSS file -->
+
+    <!-- Include ethers.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+    <style>
+        .campaign-details {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .campaign-details h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .donation-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .donation-section input {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .donation-section button {
+            padding: 10px 20px;
+            background-color: rgba(85, 172, 120, 0.78);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .donation-section button:hover {
+            background-color: #095653;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: rgba(85, 172, 120, 0.78);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        button:hover {
+            background-color: #095653;
+        }
+        .campaign-details{
+            max-width: 800px;
+            margin: 6rem auto 2rem;
+            padding: 2rem;
+            background-color: rgb(176, 199, 196);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: grid;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="campaign-details">
+        <h2>Campaign Donation</h2>
+
+        <div class="donation-section">
+            <input type="number" id="campaignIdInput" placeholder="Enter Campaign ID" required />
+            <input type="text" id="donationAmountInput" placeholder="Enter amount in ETH" required />
+            <button id="donateButton" onclick="donate()">Donate</button>
+        </div>
+
+        <div class="donor-section">
+            <h3>Donor Details</h3>
+            <button id="getDonorsButton" onclick="getDonors()">Get Donor List</button>
+            <table id="donorTable">
+                <thead>
+                    <tr>
+                        <th>Donor Address</th>
+                        <th>Donation (ETH)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Contract address and ABI
+        const contractAddress = "0x0A93645924517D08048Bed86b6B12B5217A4F173"; // Your contract address
+        const contractABI = [
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_owner",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_title",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_target",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_deadline",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_image",
+				"type": "string"
+			}
+		],
+		"name": "createCampaign",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "donateToCampaign",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "campaigns",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "title",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "target",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "deadline",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amountCollected",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "image",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getCampaigns",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "target",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "deadline",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amountCollected",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "image",
+						"type": "string"
+					},
+					{
+						"internalType": "address[]",
+						"name": "donators",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "donations",
+						"type": "uint256[]"
+					}
+				],
+				"internalType": "struct CrowdFunding.Campaign[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getDonators",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "numberOfCampaigns",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+
+        let provider, signer, contract;
+
+        // Connect to MetaMask and initialize the contract
+        async function connect() {
+            if (typeof window.ethereum !== "undefined") {
+                try {
+                    await ethereum.request({ method: "eth_requestAccounts" });
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    contract = new ethers.Contract(contractAddress, contractABI, signer);
+                    console.log("MetaMask connected:", await signer.getAddress());
+                } catch (error) {
+                    console.error("Error connecting MetaMask:", error);
+                }
+            } else {
+                console.log("Please install MetaMask");
+            }
+        }
+
+        // Donate function
+        async function donate() {
+            const campaignId = document.getElementById("campaignIdInput").value;
+            const donationAmount = document.getElementById("donationAmountInput").value;
+
+            if (!campaignId || !donationAmount) {
+                alert("Please enter both Campaign ID and donation amount.");
+                return;
+            }
+
+            const ethAmount = ethers.utils.parseEther(donationAmount);
+
+            try {
+                const tx = await contract.donateToCampaign(campaignId, { value: ethAmount });
+                await tx.wait();  // Wait for the transaction to be mined
+                alert("Donation successful!");
+            } catch (error) {
+                console.error("Donation failed:", error);
+                alert("Donation failed. Please check the campaign ID or your wallet balance.");
+            }
+        }
+
+        // Fetch donor details
+        async function getDonors() {
+            const campaignId = document.getElementById("campaignIdInput").value;
+
+            if (!campaignId) {
+                alert("Please enter a Campaign ID.");
+                return;
+            }
+
+            try {
+                const [donors, donations] = await contract.getDonators(campaignId);
+
+                const donorTableBody = document.querySelector("#donorTable tbody");
+                donorTableBody.innerHTML = ""; // Clear previous entries
+
+                donors.forEach((donor, index) => {
+                    const row = document.createElement("tr");
+                    const donationEth = ethers.utils.formatEther(donations[index]);
+
+                    row.innerHTML = `
+                        <td>${donor}</td>
+                        <td>${donationEth} ETH</td>
+                    `;
+                    donorTableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Failed to retrieve donors:", error);
+                alert("Failed to retrieve donor details. Please check the campaign ID.");
+            }
+        }
+
+        // Initialize MetaMask connection
+        connect();
+    </script>
+</body>
+</html>
