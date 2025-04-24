@@ -3,7 +3,7 @@
     --primary-color: #095653;
     --secondary-color: #202b2b;
     --text-color: #333;
-    --bg-color: rgb(202, 229, 223);
+    --bg-color: #cae5df;
     --nav-bg: #ffffff;
 }
 
@@ -70,7 +70,7 @@ nav {
     max-width: 800px;
     margin: 6rem auto 2rem;
     padding: 2rem;
-    background-color: #b0c7c4;
+    background-color: #98cbc4;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -91,11 +91,12 @@ label {
     color: var(--secondary-color);
 }
 
-input[type="text"], input[type="date"] {
+input[type="text"], input[type="date"], input[type="number"] {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    background-color: #cae5df;
 }
 
 button[type="submit"] {

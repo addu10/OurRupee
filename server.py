@@ -1,6 +1,6 @@
 """Python Flask WebApp Auth0 integration example"""
 
-import json, mysql.connector
+import json, mysql.connector, os
 from os import environ as env
 from urllib.parse import quote_plus, urlencode
 from uuid import uuid4
@@ -8,7 +8,8 @@ from uuid import uuid4
 from authlib.integrations.flask_client import OAuth
 from dotenv import find_dotenv, load_dotenv
 from flask import Flask, redirect, render_template, session, url_for, request, jsonify
-from flask_session import Session
+# Don't use filesystem sessions, use standard Flask sessions
+# from flask_session import Session
 from flask_cors import CORS
 global id_var
 id_var=0
@@ -18,16 +19,17 @@ if ENV_FILE:
     load_dotenv(ENV_FILE)
 
 app = Flask(__name__)
-app.secret_key = env.get("APP_SECRET_KEY", "your-default-secret-key")
+# Use a strong, fixed secret key for development
+app.secret_key = env.get("APP_SECRET_KEY", "super-secret-key-for-auth0-testing")
 
-# Session configuration
-app.config["SESSION_TYPE"] = "filesystem"
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_COOKIE_SECURE"] = False  # Use True in production
-app.config["SESSION_PROTECTION"] = "strong"
-app.config["SESSION_KEY_PREFIX"] = "auth0_"
-app.config["SESSION_COOKIE_PATH"] = "/"
-Session(app)
+# Standard Flask session (cookie-based)
+app.config["SESSION_COOKIE_SECURE"] = False  # Set to True in production with HTTPS
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["PERMANENT_SESSION_LIFETIME"] = 3600  # 1 hour
+
+# Enable debug mode for more verbose logs
+app.debug = True
 CORS(app)
 
 UPLOAD_FOLDER = 'uploads'
@@ -37,6 +39,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # OAuth configuration
 oauth = OAuth(app)
 
+# Print environment for debugging
+print("Environment variables:")
+for key in ["APP_SECRET_KEY", "AUTH0_CLIENT_ID", "AUTH0_CLIENT_SECRET", "AUTH0_DOMAIN"]:
+    print(f"{key}: {'Set' if env.get(key) else 'NOT SET'}")
 
 oauth.register(
     "auth0",
@@ -48,9 +54,6 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
 
-print("APP_SECRET_KEY:", env.get("APP_SECRET_KEY"))
-print("AUTH0_CLIENT_ID:", env.get("AUTH0_CLIENT_ID"))
-print("AUTH0_DOMAIN:", env.get("AUTH0_DOMAIN"))
 # Controllers API
 
 db_config = {
@@ -75,29 +78,64 @@ def home():
  
 @app.route("/login")
 def login():
-    print(f"Session before setting state: {session}")
+    # Clear any existing session data
+    session.clear()
+    
+    # Generate and store state
     state = str(uuid4())
     session['oauth_state'] = state
-    print(f"Session after setting state: {session}")
+    session.permanent = True
+    
+    # Debug session
+    print(f"Login - Session contents: {dict(session)}")
+    print(f"Login - Session ID: {session.sid if hasattr(session, 'sid') else 'No SID'}")
+    
+    # Get correct callback URL
+    callback_url = url_for("callback", _external=True)
+    print(f"Login - Callback URL: {callback_url}")
+    
+    # Show Auth0 info
+    print(f"Login - Auth0 Domain: {env.get('AUTH0_DOMAIN')}")
+    print(f"Login - Auth0 Client ID: {env.get('AUTH0_CLIENT_ID')}")
+    
+    # Redirect to Auth0
     return oauth.auth0.authorize_redirect(
-        redirect_uri="http://localhost:3000/callback",
+        redirect_uri=callback_url,
         state=state
     )
 
 @app.route("/callback", methods=["GET", "POST"])
 def callback():
-    print(f"Session during callback: {session}")
+    # Debug info
+    print(f"Callback - Full request URL: {request.url}")
+    print(f"Callback - Request args: {request.args}")
+    print(f"Callback - Session contents: {dict(session)}")
+    
+    # Get states
     request_state = request.args.get('state')
     session_state = session.get('oauth_state')
-    print(f"Request state: {request_state}")
-    print(f"Session state: {session_state}")
     
-    if 'oauth_state' not in session or session['oauth_state'] != request_state:
+    print(f"Callback - Request state: {request_state}")
+    print(f"Callback - Session state: {session_state}")
+    
+    # Check state match
+    if not session_state:
+        print("ERROR: No state in session!")
+        return "No state found in session. Session may not be persisting.", 400
+        
+    if session_state != request_state:
+        print(f"ERROR: State mismatch! Session: {session_state}, Request: {request_state}")
         return "State mismatch error", 400
-
-    token = oauth.auth0.authorize_access_token()
-    session["user"] = token
-    return redirect("/")
+    
+    try:
+        token = oauth.auth0.authorize_access_token()
+        print(f"Auth0 token received successfully")
+        session["user"] = token
+        session.permanent = True
+        return redirect("/")
+    except Exception as e:
+        print(f"Error in callback: {str(e)}")
+        return f"Authentication error: {str(e)}", 400
 
 
 @app.route("/logout")

@@ -18,6 +18,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: #fff;
+			
         }
 
         .campaign-details h2 {
@@ -72,6 +73,10 @@
             border-radius: 5px;
             cursor: pointer;
             text-decoration: none;
+			max-width: 20%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
         }
         button:hover {
             background-color: #095653;
@@ -80,12 +85,18 @@
             max-width: 800px;
             margin: 6rem auto 2rem;
             padding: 2rem;
-            background-color: rgb(176, 199, 196);
+            background-color: rgb(122, 198, 188);
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             display: grid;
             gap: 1rem;
         }
+		.buttonwala{
+			display: flex;
+			justify-content: center;
+			align-items: center
+		}
+		
     </style>
 </head>
 <body>
@@ -112,12 +123,16 @@
                 <tbody></tbody>
             </table>
         </div>
+		<div class="buttonwala">
+		<button class="home-button" onclick= "window.location.href='/'">Home</button>
+		</div>
     </div>
-
+		
+	
     <script>
         // Contract address and ABI
-        const contractAddress = "0x5407111f720ddf8aF16cd13fC5E0f2A7B4E698Ca"; // Your contract address
-        const contractABI = [
+		const contractAddress = "0x30C000bc4eA1c8201b6FD1B895344a21fdbEE8AA"; // Your contract address
+const contractABI = [
 	{
 		"inputs": [
 			{
@@ -398,6 +413,6 @@
         // Initialize MetaMask connection
         connect();
     </script>
-	<button class="home-button" onclick= "window.location.href='/'">Home</button>
+	
 </body>
 </html>
